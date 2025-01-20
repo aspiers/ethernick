@@ -54,12 +54,20 @@ export function abbreviatedAddresses(address: string): string[] {
 
 export const ABBREVIATION_FUNCTIONS = [abbreviatedAddresses];
 
+const ABBREVIATION_PATTERNS = [/^(0x[0-9a-f]+)(?:\.\.\.([0-9a-f]+))?$/i];
+
 export function isAbbreviation(abbreviation: string, fullAddress: string): boolean {
-  const m = abbreviation.match(/^(0x[0-9a-f]+)(?:\.\.\.([0-9a-f]+))?$/i);
-  if (!m) return false;
-  const [_match, start, end] = m;
-  // We consider abbreviations valid only if the ERC-55 checksum
-  // capitalization is preserved, OR if it was never there in
-  // the first place.
-  return fullAddress.startsWith(start) && fullAddress.endsWith(end || '');
+  for (const pattern of ABBREVIATION_PATTERNS) {
+    const m = abbreviation.match(pattern);
+    if (m) {
+      const [_match, start, end] = m;
+      // We consider abbreviations valid only if the ERC-55 checksum
+      // capitalization is preserved, OR if it was never there in
+      // the first place.
+      if (fullAddress.startsWith(start) && fullAddress.endsWith(end || '')) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
