@@ -45,6 +45,24 @@ const ABBREVIATION_LENGTHS = [
   [30, 0],
 ];
 
+const ABBREVIATION_LENGTHS_SOLANA = [
+  // On solscan.io, addresses are abbreviated in the form
+  // 1234567890...1234567890
+  [10, 10],
+
+  // On raydium.io, addresses in the token selection modal are abbreviated
+  // in the form 123456...123456
+  [6, 6],
+
+  // On jup.ag, addresses in the token selection modal are abbreviated
+  // in the form 12345...12345
+  [5, 5],
+
+  // On meteora.ag, addresses in the pool creation page are abbreviated
+  // in the form 1234...1234
+  [4, 4],
+];
+
 export function abbreviatedAddresses(address: string): string[] {
   return ABBREVIATION_LENGTHS.map(
     ([left, right]: [number, number]) =>
@@ -52,9 +70,19 @@ export function abbreviatedAddresses(address: string): string[] {
   );
 }
 
-export const ABBREVIATION_FUNCTIONS = [abbreviatedAddresses];
+export function abbreviatedSolanaAddresses(address: string): string[] {
+  return ABBREVIATION_LENGTHS_SOLANA.map(
+    ([left, right]: [number, number]) =>
+      address.slice(0, left) + (right === 0 ? '' : '...' + address.slice(-right)),
+  );
+}
 
-const ABBREVIATION_PATTERNS = [/^(0x[0-9a-f]+)(?:\.\.\.([0-9a-f]+))?$/i];
+export const ABBREVIATION_FUNCTIONS = [abbreviatedAddresses, abbreviatedSolanaAddresses];
+
+const ABBREVIATION_PATTERNS = [
+  /^(0x[0-9a-f]+)(?:\.\.\.([0-9a-f]+))?$/i, // EVM
+  /^([1-9A-HJ-NP-Za-km-z]+)(?:\.\.\.([1-9A-HJ-NP-Za-km-z]+))?$/i, // Solana
+];
 
 export function isAbbreviation(abbreviation: string, fullAddress: string): boolean {
   for (const pattern of ABBREVIATION_PATTERNS) {
