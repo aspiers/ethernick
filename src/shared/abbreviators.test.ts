@@ -1,4 +1,8 @@
-import { abbreviatedAddresses, abbreviatedSolanaAddresses, isAbbreviation } from './abbreviators';
+import {
+  abbreviatedEVMAddresses,
+  abbreviatedSolanaAddresses,
+  isAbbreviation,
+} from './abbreviators';
 
 const FULL_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
 const SOLANA_ADDRESS = 'DYw8jCTfwHNRJhhmFcbXvVDTqWMEVFBX6ZKUmG5CNSKK';
@@ -53,9 +57,9 @@ const INVALID_SOLANA_ABBREVIATIONS = [
   'foobar',
 ];
 
-describe('abbreviatedAddresses()', () => {
+describe('abbreviatedEVMAddresses()', () => {
   it('outputs an array of abbreviated addresses', () => {
-    const abbrevs = abbreviatedAddresses(FULL_ADDRESS);
+    const abbrevs = abbreviatedEVMAddresses(FULL_ADDRESS);
     expect(abbrevs).toEqual(EXPECTED_ETH_ABBREVIATIONS);
   });
 });
