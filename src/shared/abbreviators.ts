@@ -1,3 +1,5 @@
+import { AddressType } from './types';
+
 const ABBREVIATION_LENGTHS_EVM = [
   // On many sites (e.g. Tenderly, defender.openzeppelin.com, Gnosis
   // Safe), addresses are abbreviated in the form 0x12345678...1234
@@ -77,7 +79,12 @@ export function abbreviatedSolanaAddresses(address: string): string[] {
   );
 }
 
-export const ABBREVIATION_FUNCTIONS = [abbreviatedEVMAddresses, abbreviatedSolanaAddresses];
+export type AbbreviationFunc = (address: string) => string[];
+
+export const ABBREVIATION_FUNCTIONS: Record<AddressType, AbbreviationFunc[]> = {
+  EVM: [abbreviatedEVMAddresses],
+  Solana: [abbreviatedSolanaAddresses],
+};
 
 const ABBREVIATION_PATTERNS = [
   /^(0x[0-9a-f]+)(?:\.\.\.([0-9a-f]+))?$/i, // EVM
